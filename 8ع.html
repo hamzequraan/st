@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاستدامة - تحدي المعرفة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            direction: rtl; 
+            text-align: center; 
+            background: linear-gradient(to right, #6a11cb, #2575fc); 
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .container { 
+            width: 80%; 
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        button {
+            background: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 10px;
+        }
+        .hidden { display: none; }
+        .footer {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 18px;
+        }
+        .menu-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .menu {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+        }
+        .menu button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            background: #ffcc00;
+            color: black;
+        }
+        .dark-mode {
+            background: #121212;
+            color: #f5f5f5;
+        }
+        .contact-container {
+            display: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <div class="menu" id="menu">
+        <button onclick="toggleDarkMode()">تبديل الوضع الليلي</button>
+        <button onclick="startQuiz()">ابدأ التحدي</button>
+        <button onclick="location.reload()">الصفحة الرئيسية</button>
+        <button onclick="showContact()">تواصل معنا</button>
+    </div>
+    
+    <div class="container">
+        <h1>ما هي الاستدامة وأهميتها؟</h1>
+        <p>الاستدامة تعني تلبية احتياجات الحاضر دون التأثير على قدرة الأجيال القادمة في تلبية احتياجاتهم.</p>
+    </div>
+    
+    <div class="container hidden quiz">
+        <h2>تحدي الاستدامة</h2>
+        <p id="question"></p>
+        <button onclick="checkAnswer(0)"></button>
+        <button onclick="checkAnswer(1)"></button>
+        <button onclick="checkAnswer(2)"></button>
+    </div>
+    
+    <div class="contact-container" id="contact-container">
+        <h2>مرحباً بك في موقعنا الإلكتروني للتحديات</h2>
+        <p>الدعم الفني متاح من الساعة 10 صباحاً حتى 10 مساءً بتوقيت السعودية.</p>
+    </div>
+    
+    <div class="footer">
+        <h3>للتواصل معنا</h3>
+        <a href="https://twitter.com" target="_blank">تويتر</a> |
+        <a href="https://facebook.com" target="_blank">فيسبوك</a> |
+        <a href="mailto:info@example.com">البريد الإلكتروني</a>
+    </div>
+    
+    <script>
+        function toggleMenu() {
+            let menu = document.getElementById("menu");
+            menu.style.display = menu.style.display === "block" ? "none" : "block";
+        }
+        function toggleDarkMode() {
+            document.body.classList.toggle("dark-mode");
+        }
+        function startQuiz() {
+            document.querySelector('.container').style.display = 'none';
+            document.querySelector('.quiz').classList.remove('hidden');
+            loadQuestion();
+        }
+        function showContact() {
+            document.getElementById("contact-container").style.display = "block";
+        }
+        const questions = [
+            { q: "ما هو المصدر الأكثر استدامة للطاقة؟", options: ["الوقود الأحفوري", "الطاقة الشمسية", "الغاز الطبيعي"], answer: 1 },
+            { q: "أي من التالي يساعد في تقليل النفايات؟", options: ["إعادة التدوير", "حرق النفايات", "التخلص العشوائي"], answer: 0 },
+            { q: "ما هو الهدف الأساسي للاستدامة؟", options: ["زيادة الاستهلاك", "تحقيق التوازن البيئي", "تدمير الموارد"], answer: 1 }
+        ];
+        let currentQuestion = 0;
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                let q = questions[currentQuestion];
+                document.getElementById("question").textContent = q.q;
+                let buttons = document.querySelectorAll(".quiz button");
+                buttons.forEach((btn, i) => {
+                    btn.textContent = q.options[i];
+                });
+            } else {
+                alert("انتهى التحدي! شكراً لمشاركتك.");
+            }
+        }
+        function checkAnswer(choice) {
+            if (choice === questions[currentQuestion].answer) {
+                alert("إجابة صحيحة!");
+            } else {
+                alert("إجابة خاطئة!");
+            }
+            currentQuestion++;
+            loadQuestion();
+        }
+    </script>
+</body>
+</html>
